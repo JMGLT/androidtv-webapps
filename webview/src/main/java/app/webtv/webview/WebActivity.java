@@ -3,10 +3,12 @@ package app.webtv.webview;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
@@ -31,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Abre una web a pantalla completa en un WebView, con navegación por cursor
@@ -42,6 +45,24 @@ public abstract class WebActivity extends Activity {
 
     /** Dominios a los que se permite navegar y para los que se concede DRM. */
     protected abstract String[] allowedDomains();
+
+    /** Idioma preferido de la web (etiqueta BCP 47, p. ej. "it-IT"); null = el del sistema. */
+    protected String languageTag() {
+        return null;
+    }
+
+    /** Si es true, se reducen las animaciones de la web para que vaya más fluida en equipos lentos. */
+    protected boolean reduceMotion() {
+        return false;
+    }
+
+    // Acorta animaciones y transiciones (sin eliminarlas, para no romper los eventos de la web).
+    private static final String REDUCE_MOTION_JS =
+            "(function(){var s=document.createElement('style');"
+                    + "s.textContent='*,*::before,*::after{animation-duration:0.001s!important;"
+                    + "animation-delay:0s!important;transition-duration:0.001s!important;"
+                    + "transition-delay:0s!important;scroll-behavior:auto!important}';"
+                    + "(document.head||document.documentElement).appendChild(s);})();";
 
     private static final int MATCH = ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -56,6 +77,20 @@ public abstract class WebActivity extends Activity {
     private float cx;
     private float cy;
     private float density;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        // Fija el idioma antes de crear el WebView, para que envíe el Accept-Language correcto.
+        String tag = languageTag();
+        if (tag != null) {
+            Locale locale = Locale.forLanguageTag(tag);
+            Locale.setDefault(locale);
+            Configuration config = new Configuration(base.getResources().getConfiguration());
+            config.setLocale(locale);
+            base = base.createConfigurationContext(config);
+        }
+        super.attachBaseContext(base);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +134,10 @@ public abstract class WebActivity extends Activity {
         s.setAllowContentAccess(false);
         s.setSupportMultipleWindows(false);
         s.setJavaScriptCanOpenWindowsAutomatically(false);
+        if (Build.VERSION.SDK_INT >= 26) {
+            // Evita las consultas de Safe Browsing a Google (más privado y algo más rápido).
+            s.setSafeBrowsingEnabled(false);
+        }
 
         // Modo escritorio: se cambia solo la parte del sistema operativo del user agent;
         // la versión real del motor se mantiene.
@@ -132,6 +171,9 @@ public abstract class WebActivity extends Activity {
                 if (!rejectScript.isEmpty() && url != null
                         && hostAllowed(Uri.parse(url).getHost())) {
                     view.evaluateJavascript(rejectScript, null);
+                }
+                if (reduceMotion()) {
+                    view.evaluateJavascript(REDUCE_MOTION_JS, null);
                 }
             }
         });

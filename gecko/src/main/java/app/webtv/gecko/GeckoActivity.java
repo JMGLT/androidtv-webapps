@@ -22,6 +22,7 @@ import org.mozilla.geckoview.AllowOrDeny;
 import org.mozilla.geckoview.ContentBlocking;
 import org.mozilla.geckoview.GeckoResult;
 import org.mozilla.geckoview.GeckoRuntime;
+import org.mozilla.geckoview.GeckoRuntimeSettings;
 import org.mozilla.geckoview.GeckoSession;
 import org.mozilla.geckoview.GeckoSessionSettings;
 import org.mozilla.geckoview.GeckoView;
@@ -37,6 +38,11 @@ public abstract class GeckoActivity extends Activity {
 
     /** Dominios a los que se permite navegar y para los que se concede DRM. */
     protected abstract String[] allowedDomains();
+
+    /** Idioma preferido de la web (etiqueta BCP 47, p. ej. "it-IT"); null = el del sistema. */
+    protected String languageTag() {
+        return null;
+    }
 
     private static final int MATCH = ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -74,7 +80,11 @@ public abstract class GeckoActivity extends Activity {
         hideSystemUi();
 
         if (runtime == null) {
-            runtime = GeckoRuntime.create(getApplicationContext());
+            GeckoRuntimeSettings.Builder runtimeSettings = new GeckoRuntimeSettings.Builder();
+            if (languageTag() != null) {
+                runtimeSettings.locales(new String[]{languageTag()});
+            }
+            runtime = GeckoRuntime.create(getApplicationContext(), runtimeSettings.build());
             // Cookies de terceros rechazadas por defecto; las propias del servicio se aceptan
             // para poder mantener la sesión iniciada.
             runtime.getSettings().getContentBlocking()

@@ -11,4 +11,9 @@ public class DaznActivity extends GeckoActivity {
     protected String[] allowedDomains() {
         return new String[]{"dazn.com"};
     }
+
+    @Override
+    protected String languageTag() {
+        return "it-IT";
+    }
 }

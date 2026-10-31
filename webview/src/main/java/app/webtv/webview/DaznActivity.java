@@ -11,4 +11,14 @@ public class DaznActivity extends WebActivity {
     protected String[] allowedDomains() {
         return new String[]{"dazn.com"};
     }
+
+    @Override
+    protected String languageTag() {
+        return "it-IT";
+    }
+
+    @Override
+    protected boolean reduceMotion() {
+        return true;
+    }
 }

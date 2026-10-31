@@ -12,4 +12,9 @@ public class SkyActivity extends GeckoActivity {
         // Incluye el acceso con Sky ID y el reproductor (todos bajo sky.it).
         return new String[]{"sky.it"};
     }
+
+    @Override
+    protected String languageTag() {
+        return "it-IT";
+    }
 }

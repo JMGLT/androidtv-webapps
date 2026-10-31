@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Rechazar cookies",
-  "version": "1.0",
-  "description": "Pulsa automáticamente «Rechazar» en los avisos de cookies.",
+  "name": "Rechazar cookies y ajustes para TV",
+  "version": "1.1",
+  "description": "Pulsa automáticamente «Rechazar» en los avisos de cookies y reduce las animaciones en DAZN.",
   "browser_specific_settings": {
     "gecko": {
       "id": "cookie-reject@androidtv-webapps"
@@ -14,6 +14,12 @@
       "js": ["reject.js"],
       "run_at": "document_idle",
       "all_frames": true
+    },
+    {
+      "matches": ["https://*.dazn.com/*"],
+      "js": ["tv-tweaks.js"],
+      "run_at": "document_start",
+      "all_frames": false
     }
   ]
 }
