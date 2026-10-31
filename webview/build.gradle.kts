@@ -10,8 +10,21 @@ android {
         applicationId = "app.webtv.webview"
         minSdk = 21
         targetSdk = 28
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
+    }
+
+    // Una app independiente por servicio: así cada una tiene su propio acceso en el launcher.
+    flavorDimensions += "service"
+    productFlavors {
+        create("netflix") {
+            dimension = "service"
+            applicationIdSuffix = ".netflix"
+        }
+        create("prime") {
+            dimension = "service"
+            applicationIdSuffix = ".prime"
+        }
     }
 
     buildTypes {

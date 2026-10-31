@@ -7,14 +7,28 @@ val geckoVersion = (project.findProperty("geckoVersion") as String?) ?: "+"
 
 android {
     namespace = "app.webtv.gecko"
-    compileSdk = 34
+    // GeckoView reciente y sus dependencias androidx exigen compilar contra una API alta.
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "app.webtv.gecko"
         minSdk = 26
         targetSdk = 28
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
+    }
+
+    // Una app independiente por servicio: así cada una tiene su propio acceso en el launcher.
+    flavorDimensions += "service"
+    productFlavors {
+        create("netflix") {
+            dimension = "service"
+            applicationIdSuffix = ".netflix"
+        }
+        create("prime") {
+            dimension = "service"
+            applicationIdSuffix = ".prime"
+        }
     }
 
     // Un APK por arquitectura (GeckoView es grande y así cada archivo pesa menos).

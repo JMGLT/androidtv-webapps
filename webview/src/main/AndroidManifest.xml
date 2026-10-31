@@ -11,44 +11,11 @@
         android:name="android.hardware.touchscreen"
         android:required="false" />
 
+    <!-- La actividad de cada servicio se declara en el manifiesto de su variante (netflix / prime). -->
     <application
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_webtv"
         android:label="@string/app_name"
-        android:usesCleartextTraffic="false">
-
-        <activity
-            android:name=".NetflixActivity"
-            android:banner="@drawable/banner_netflix"
-            android:configChanges="orientation|screenSize|keyboardHidden|keyboard|navigation|smallestScreenSize|screenLayout|uiMode"
-            android:exported="true"
-            android:icon="@drawable/ic_netflix"
-            android:label="@string/netflix_label"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".PrimeActivity"
-            android:banner="@drawable/banner_prime"
-            android:configChanges="orientation|screenSize|keyboardHidden|keyboard|navigation|smallestScreenSize|screenLayout|uiMode"
-            android:exported="true"
-            android:icon="@drawable/ic_prime"
-            android:label="@string/prime_label"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-    </application>
+        android:usesCleartextTraffic="false" />
 </manifest>
