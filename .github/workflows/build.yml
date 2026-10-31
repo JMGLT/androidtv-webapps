@@ -8,6 +8,11 @@ on:
 permissions:
   contents: write
 
+# Si llega un commit nuevo mientras se compila, se cancela la compilación anterior.
+concurrency:
+  group: build-apks
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -38,27 +43,44 @@ jobs:
           if [ -n "$GECKO_VERSION" ]; then GV="-PgeckoVersion=$GECKO_VERSION"; else GV=""; fi
           gradle assembleDebug --no-daemon --stacktrace $GV 2>&1 | tee build.log
 
+      # Reúne los APK con nombres normales: Servicio_webapp_Motor[_arquitectura]_version.apk
+      - name: Collect and rename APKs
+        if: always()
+        run: |
+          VERSION=$(grep -oP 'versionName = "\K[^"]+' webview/build.gradle.kts | head -1)
+          echo "APP_VERSION=${VERSION}" >> "$GITHUB_ENV"
+          mkdir -p apks
+          find . -path '*/build/outputs/apk/*' -name '*.apk' | while read -r f; do
+            b=$(basename "$f" .apk)
+            case "$b" in
+              webview-netflix-debug) name="Netflix_webapp_WebView_${VERSION}.apk" ;;
+              webview-prime-debug)   name="PrimeVideo_webapp_WebView_${VERSION}.apk" ;;
+              gecko-netflix-*-debug) abi=${b#gecko-netflix-}; abi=${abi%-debug}; name="Netflix_webapp_GeckoView_${abi}_${VERSION}.apk" ;;
+              gecko-prime-*-debug)   abi=${b#gecko-prime-};   abi=${abi%-debug}; name="PrimeVideo_webapp_GeckoView_${abi}_${VERSION}.apk" ;;
+              *) name="${b}_${VERSION}.apk" ;;
+            esac
+            cp "$f" "apks/$name"
+          done
+          ls -l apks
+
       # Publica los APK en la pestaña Releases (release "latest", se reemplaza en cada compilación)
       - name: Publish GitHub release
         if: success()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          mkdir -p release
-          find . -path '*/build/outputs/apk/*' -name '*.apk' -exec cp {} release/ \;
-          ls -l release
           printf '%s\n' \
-            "Compilación automática del commit ${GITHUB_SHA::7} (GeckoView ${GECKO_VERSION})." \
+            "Versión ${APP_VERSION}. Compilación automática del commit ${GITHUB_SHA::7} (GeckoView ${GECKO_VERSION})." \
             "" \
-            "- webview-netflix / webview-prime: versión WebView (ligera; usa el WebView del sistema)." \
-            "- gecko-*-armeabi-v7a: versión GeckoView para boxes de 32 bits." \
-            "- gecko-*-arm64-v8a: versión GeckoView para dispositivos de 64 bits." \
+            "- *_WebView_*: usa el WebView del sistema (ligera; conviene tenerlo actualizado)." \
+            "- *_GeckoView_armeabi-v7a_*: motor de Firefox, para boxes de 32 bits." \
+            "- *_GeckoView_arm64-v8a_*: motor de Firefox, para dispositivos de 64 bits." \
             "" \
             "Instalación: adb install -r archivo.apk" > notes.md
           gh release delete latest --cleanup-tag --yes || true
-          gh release create latest release/*.apk \
+          gh release create latest apks/*.apk \
             --target "$GITHUB_SHA" \
-            --title "Última compilación" \
+            --title "Webapps ${APP_VERSION}" \
             --notes-file notes.md
 
       # Publica los APK y el registro en la rama "builds" (aunque la compilación falle)
@@ -67,9 +89,8 @@ jobs:
         run: |
           mkdir -p out
           cp build.log out/ 2>/dev/null || true
-          find . -path '*/build/outputs/apk/*' -name '*.apk' -exec cp {} out/ \;
-          echo "sha=${GITHUB_SHA} status=${{ job.status }} gecko=${GECKO_VERSION}" > out/status.txt
-          ls -l out
+          cp apks/*.apk out/ 2>/dev/null || true
+          echo "sha=${GITHUB_SHA} status=${{ job.status }} gecko=${GECKO_VERSION} version=${APP_VERSION}" > out/status.txt
           # GitHub rechaza archivos de más de 100 MB: si algún APK los supera, se trocea
           # (se recompone con: cat archivo.apk.part.* > archivo.apk)
           for f in out/*.apk; do
