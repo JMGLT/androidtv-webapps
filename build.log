@@ -1,0 +1,289 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.9/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :gecko:preBuild UP-TO-DATE
+> Task :gecko:preDaznDebugBuild UP-TO-DATE
+> Task :gecko:mergeDaznDebugNativeDebugMetadata NO-SOURCE
+> Task :gecko:checkDaznDebugAarMetadata SKIPPED
+> Task :gecko:generateDaznDebugResValues
+> Task :gecko:javaPreCompileDaznDebug
+> Task :gecko:mapDaznDebugSourceSetPaths
+> Task :gecko:generateDaznDebugResources
+> Task :gecko:packageDaznDebugResources
+> Task :gecko:mergeDaznDebugResources
+> Task :gecko:createDaznDebugCompatibleScreenManifests
+> Task :gecko:extractDeepLinksDaznDebug
+> Task :gecko:parseDaznDebugLocalResources
+> Task :gecko:processDaznDebugMainManifest
+> Task :gecko:processDaznDebugManifest
+> Task :gecko:mergeDaznDebugShaders
+> Task :gecko:processDaznDebugManifestForPackage
+> Task :gecko:compileDaznDebugShaders NO-SOURCE
+> Task :gecko:generateDaznDebugAssets UP-TO-DATE
+> Task :gecko:mergeDaznDebugAssets
+> Task :gecko:desugarDaznDebugFileDependencies
+> Task :gecko:processDaznDebugJavaRes NO-SOURCE
+> Task :gecko:processDaznDebugResources
+> Task :gecko:checkDaznDebugDuplicateClasses
+> Task :gecko:compressDaznDebugAssets
+> Task :gecko:mergeDaznDebugJavaResource
+
+> Task :gecko:compileDaznDebugJavaWithJavac
+Note: /home/runner/work/androidtv-webapps/androidtv-webapps/gecko/src/main/java/app/webtv/gecko/GeckoActivity.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :gecko:dexBuilderDaznDebug
+> Task :gecko:mergeDaznDebugStartupProfile
+> Task :gecko:mergeDaznDebugGlobalSynthetics
+> Task :gecko:mergeLibDexDaznDebug
+> Task :gecko:mergeDaznDebugJniLibFolders
+> Task :gecko:mergeProjectDexDaznDebug
+> Task :gecko:mergeDaznDebugNativeLibs
+> Task :gecko:validateSigningDaznDebug
+> Task :gecko:writeDaznDebugAppMetadata
+> Task :gecko:writeDaznDebugSigningConfigVersions
+> Task :gecko:preNetflixDebugBuild UP-TO-DATE
+> Task :gecko:mergeNetflixDebugNativeDebugMetadata NO-SOURCE
+> Task :gecko:checkNetflixDebugAarMetadata SKIPPED
+> Task :gecko:generateNetflixDebugResValues
+> Task :gecko:mapNetflixDebugSourceSetPaths
+> Task :gecko:generateNetflixDebugResources
+> Task :gecko:javaPreCompileNetflixDebug
+> Task :gecko:packageNetflixDebugResources
+> Task :gecko:parseNetflixDebugLocalResources
+> Task :gecko:createNetflixDebugCompatibleScreenManifests
+> Task :gecko:extractDeepLinksNetflixDebug
+> Task :gecko:mergeNetflixDebugResources
+
+> Task :gecko:stripDaznDebugDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libclearkey.so, libcrashhelper.so, libcrashtools.so, libfreebl3.so, libgkcodecs.so, liblgpllibs.so, libmozavcodec.so, libmozavutil.so, libmozglue.so, libnss3.so, libplugin-container.so, libsoftokn3.so, libxul.so.
+
+> Task :gecko:processNetflixDebugMainManifest
+> Task :gecko:processNetflixDebugManifest
+> Task :gecko:mergeNetflixDebugShaders
+> Task :gecko:compileNetflixDebugShaders NO-SOURCE
+> Task :gecko:generateNetflixDebugAssets UP-TO-DATE
+> Task :gecko:mergeNetflixDebugAssets
+> Task :gecko:processNetflixDebugManifestForPackage
+> Task :gecko:checkNetflixDebugDuplicateClasses
+> Task :gecko:desugarNetflixDebugFileDependencies
+> Task :gecko:mergeNetflixDebugStartupProfile
+> Task :gecko:processNetflixDebugResources
+> Task :gecko:compressNetflixDebugAssets
+
+> Task :gecko:compileNetflixDebugJavaWithJavac
+Note: /home/runner/work/androidtv-webapps/androidtv-webapps/gecko/src/main/java/app/webtv/gecko/GeckoActivity.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :gecko:dexBuilderNetflixDebug
+> Task :gecko:mergeLibDexNetflixDebug
+> Task :gecko:processNetflixDebugJavaRes NO-SOURCE
+> Task :gecko:mergeNetflixDebugGlobalSynthetics
+> Task :gecko:mergeExtDexDaznDebug
+> Task :gecko:mergeProjectDexNetflixDebug
+> Task :gecko:mergeNetflixDebugJavaResource
+> Task :gecko:mergeNetflixDebugJniLibFolders
+> Task :gecko:validateSigningNetflixDebug
+> Task :gecko:writeNetflixDebugAppMetadata
+> Task :gecko:writeNetflixDebugSigningConfigVersions
+> Task :gecko:prePrimeDebugBuild UP-TO-DATE
+> Task :gecko:mergePrimeDebugNativeDebugMetadata NO-SOURCE
+> Task :gecko:mergeExtDexNetflixDebug
+> Task :gecko:checkPrimeDebugAarMetadata SKIPPED
+> Task :gecko:generatePrimeDebugResValues
+> Task :gecko:mapPrimeDebugSourceSetPaths
+> Task :gecko:generatePrimeDebugResources
+> Task :gecko:javaPreCompilePrimeDebug
+> Task :gecko:packagePrimeDebugResources
+> Task :gecko:parsePrimeDebugLocalResources
+> Task :gecko:createPrimeDebugCompatibleScreenManifests
+> Task :gecko:extractDeepLinksPrimeDebug
+> Task :gecko:mergePrimeDebugResources
+> Task :gecko:mergeNetflixDebugNativeLibs
+> Task :gecko:processPrimeDebugMainManifest
+> Task :gecko:packageDaznDebug
+> Task :gecko:createDaznDebugApkListingFileRedirect
+> Task :gecko:assembleDaznDebug
+> Task :gecko:processPrimeDebugManifest
+> Task :gecko:mergePrimeDebugShaders
+> Task :gecko:compilePrimeDebugShaders NO-SOURCE
+> Task :gecko:generatePrimeDebugAssets UP-TO-DATE
+> Task :gecko:mergePrimeDebugAssets
+> Task :gecko:processPrimeDebugManifestForPackage
+> Task :gecko:compressPrimeDebugAssets
+
+> Task :gecko:stripNetflixDebugDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libclearkey.so, libcrashhelper.so, libcrashtools.so, libfreebl3.so, libgkcodecs.so, liblgpllibs.so, libmozavcodec.so, libmozavutil.so, libmozglue.so, libnss3.so, libplugin-container.so, libsoftokn3.so, libxul.so.
+
+> Task :gecko:desugarPrimeDebugFileDependencies
+> Task :gecko:mergePrimeDebugStartupProfile
+> Task :gecko:processPrimeDebugJavaRes NO-SOURCE
+> Task :gecko:checkPrimeDebugDuplicateClasses
+> Task :gecko:processPrimeDebugResources
+
+> Task :gecko:compilePrimeDebugJavaWithJavac
+Note: /home/runner/work/androidtv-webapps/androidtv-webapps/gecko/src/main/java/app/webtv/gecko/GeckoActivity.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :gecko:mergePrimeDebugJavaResource
+> Task :gecko:dexBuilderPrimeDebug
+> Task :gecko:mergePrimeDebugGlobalSynthetics
+> Task :gecko:mergeLibDexPrimeDebug
+> Task :gecko:mergePrimeDebugJniLibFolders
+> Task :gecko:mergeProjectDexPrimeDebug
+> Task :gecko:validateSigningPrimeDebug
+> Task :gecko:writePrimeDebugAppMetadata
+> Task :gecko:writePrimeDebugSigningConfigVersions
+> Task :webview:preBuild UP-TO-DATE
+> Task :webview:preDaznDebugBuild UP-TO-DATE
+> Task :webview:mergeDaznDebugNativeDebugMetadata NO-SOURCE
+> Task :gecko:mergePrimeDebugNativeLibs
+> Task :webview:javaPreCompileDaznDebug
+> Task :webview:checkDaznDebugAarMetadata
+> Task :gecko:mergeExtDexPrimeDebug
+> Task :gecko:packageNetflixDebug
+> Task :gecko:createNetflixDebugApkListingFileRedirect
+> Task :gecko:assembleNetflixDebug
+> Task :webview:generateDaznDebugResValues
+> Task :webview:mapDaznDebugSourceSetPaths
+> Task :webview:generateDaznDebugResources
+> Task :webview:mergeDaznDebugResources
+> Task :webview:packageDaznDebugResources
+
+> Task :gecko:stripPrimeDebugDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libclearkey.so, libcrashhelper.so, libcrashtools.so, libfreebl3.so, libgkcodecs.so, liblgpllibs.so, libmozavcodec.so, libmozavutil.so, libmozglue.so, libnss3.so, libplugin-container.so, libsoftokn3.so, libxul.so.
+
+> Task :webview:parseDaznDebugLocalResources
+> Task :webview:createDaznDebugCompatibleScreenManifests
+> Task :webview:extractDeepLinksDaznDebug
+> Task :webview:processDaznDebugMainManifest
+> Task :webview:processDaznDebugManifest
+> Task :webview:processDaznDebugManifestForPackage
+> Task :webview:mergeDaznDebugShaders
+> Task :webview:compileDaznDebugShaders NO-SOURCE
+> Task :webview:generateDaznDebugAssets UP-TO-DATE
+> Task :webview:mergeDaznDebugAssets
+> Task :webview:processDaznDebugResources
+> Task :webview:compressDaznDebugAssets
+> Task :webview:desugarDaznDebugFileDependencies
+
+> Task :webview:compileDaznDebugJavaWithJavac
+Note: /home/runner/work/androidtv-webapps/androidtv-webapps/webview/src/main/java/app/webtv/webview/WebActivity.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :webview:dexBuilderDaznDebug
+> Task :webview:processDaznDebugJavaRes NO-SOURCE
+> Task :webview:mergeDaznDebugGlobalSynthetics
+> Task :webview:mergeDaznDebugJavaResource
+> Task :webview:checkDaznDebugDuplicateClasses
+> Task :webview:mergeDaznDebugStartupProfile
+> Task :webview:mergeExtDexDaznDebug
+> Task :webview:mergeDaznDebugJniLibFolders
+> Task :webview:mergeLibDexDaznDebug
+> Task :webview:mergeDaznDebugNativeLibs NO-SOURCE
+> Task :webview:stripDaznDebugDebugSymbols NO-SOURCE
+> Task :webview:validateSigningDaznDebug
+> Task :webview:writeDaznDebugAppMetadata
+> Task :webview:mergeProjectDexDaznDebug
+> Task :webview:writeDaznDebugSigningConfigVersions
+> Task :webview:preNetflixDebugBuild UP-TO-DATE
+> Task :webview:mergeNetflixDebugNativeDebugMetadata NO-SOURCE
+> Task :webview:javaPreCompileNetflixDebug
+> Task :webview:checkNetflixDebugAarMetadata
+> Task :webview:generateNetflixDebugResValues
+> Task :webview:mapNetflixDebugSourceSetPaths
+> Task :webview:generateNetflixDebugResources
+> Task :webview:mergeNetflixDebugResources
+> Task :webview:packageNetflixDebugResources
+> Task :webview:parseNetflixDebugLocalResources
+> Task :webview:createNetflixDebugCompatibleScreenManifests
+> Task :webview:extractDeepLinksNetflixDebug
+> Task :webview:processNetflixDebugMainManifest
+> Task :webview:processNetflixDebugManifest
+> Task :webview:processNetflixDebugManifestForPackage
+> Task :webview:mergeNetflixDebugShaders
+> Task :webview:packageDaznDebug
+> Task :webview:createDaznDebugApkListingFileRedirect
+> Task :webview:assembleDaznDebug
+> Task :webview:compileNetflixDebugShaders NO-SOURCE
+> Task :webview:generateNetflixDebugAssets UP-TO-DATE
+> Task :webview:mergeNetflixDebugAssets
+> Task :webview:compressNetflixDebugAssets
+> Task :webview:checkNetflixDebugDuplicateClasses
+> Task :webview:desugarNetflixDebugFileDependencies
+> Task :webview:mergeNetflixDebugStartupProfile
+> Task :webview:mergeExtDexNetflixDebug
+> Task :webview:processNetflixDebugJavaRes NO-SOURCE
+> Task :webview:mergeLibDexNetflixDebug
+> Task :webview:mergeNetflixDebugJavaResource
+> Task :webview:mergeNetflixDebugJniLibFolders
+> Task :webview:mergeNetflixDebugNativeLibs NO-SOURCE
+> Task :webview:stripNetflixDebugDebugSymbols NO-SOURCE
+> Task :webview:validateSigningNetflixDebug
+> Task :webview:writeNetflixDebugAppMetadata
+> Task :webview:writeNetflixDebugSigningConfigVersions
+> Task :webview:prePrimeDebugBuild UP-TO-DATE
+> Task :webview:mergePrimeDebugNativeDebugMetadata NO-SOURCE
+> Task :webview:javaPreCompilePrimeDebug
+> Task :webview:checkPrimeDebugAarMetadata
+> Task :webview:generatePrimeDebugResValues
+> Task :webview:processNetflixDebugResources
+> Task :webview:mapPrimeDebugSourceSetPaths
+
+> Task :webview:compileNetflixDebugJavaWithJavac
+Note: /home/runner/work/androidtv-webapps/androidtv-webapps/webview/src/main/java/app/webtv/webview/WebActivity.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :webview:dexBuilderNetflixDebug
+> Task :webview:mergeNetflixDebugGlobalSynthetics
+> Task :webview:generatePrimeDebugResources
+> Task :webview:mergeProjectDexNetflixDebug
+> Task :gecko:packagePrimeDebug
+> Task :gecko:createPrimeDebugApkListingFileRedirect
+> Task :gecko:assemblePrimeDebug
+> Task :gecko:assembleDebug
+> Task :webview:mergePrimeDebugResources
+> Task :webview:packagePrimeDebugResources
+> Task :webview:packageNetflixDebug
+> Task :webview:parsePrimeDebugLocalResources
+> Task :webview:createNetflixDebugApkListingFileRedirect
+> Task :webview:assembleNetflixDebug
+> Task :webview:createPrimeDebugCompatibleScreenManifests
+> Task :webview:extractDeepLinksPrimeDebug
+> Task :webview:processPrimeDebugMainManifest
+> Task :webview:processPrimeDebugManifest
+> Task :webview:mergePrimeDebugShaders
+> Task :webview:compilePrimeDebugShaders NO-SOURCE
+> Task :webview:generatePrimeDebugAssets UP-TO-DATE
+> Task :webview:mergePrimeDebugAssets
+> Task :webview:compressPrimeDebugAssets
+> Task :webview:processPrimeDebugManifestForPackage
+> Task :webview:checkPrimeDebugDuplicateClasses
+> Task :webview:desugarPrimeDebugFileDependencies
+> Task :webview:mergePrimeDebugStartupProfile
+> Task :webview:processPrimeDebugJavaRes NO-SOURCE
+> Task :webview:mergeExtDexPrimeDebug
+> Task :webview:mergePrimeDebugJavaResource
+> Task :webview:mergeLibDexPrimeDebug
+> Task :webview:mergePrimeDebugJniLibFolders
+> Task :webview:mergePrimeDebugNativeLibs NO-SOURCE
+> Task :webview:stripPrimeDebugDebugSymbols NO-SOURCE
+> Task :webview:validateSigningPrimeDebug
+> Task :webview:writePrimeDebugAppMetadata
+> Task :webview:writePrimeDebugSigningConfigVersions
+> Task :webview:processPrimeDebugResources
+
+> Task :webview:compilePrimeDebugJavaWithJavac
+Note: /home/runner/work/androidtv-webapps/androidtv-webapps/webview/src/main/java/app/webtv/webview/WebActivity.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :webview:dexBuilderPrimeDebug
+> Task :webview:mergePrimeDebugGlobalSynthetics
+> Task :webview:mergeProjectDexPrimeDebug
+> Task :webview:packagePrimeDebug
+> Task :webview:createPrimeDebugApkListingFileRedirect
+> Task :webview:assemblePrimeDebug
+> Task :webview:assembleDebug
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_2-1793471360173.json
+
+BUILD SUCCESSFUL in 38s
+201 actionable tasks: 201 executed
