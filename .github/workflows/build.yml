@@ -23,10 +23,20 @@ jobs:
         with:
           gradle-version: '8.9'
 
+      # Última versión estable de GeckoView publicada por Mozilla
+      - name: Find latest GeckoView version
+        run: |
+          META=$(curl -fsSL https://maven.mozilla.org/maven2/org/mozilla/geckoview/geckoview/maven-metadata.xml || true)
+          V=$(echo "$META" | grep -oP '(?<=<release>)[^<]+' | head -1)
+          [ -z "$V" ] && V=$(echo "$META" | grep -oP '(?<=<latest>)[^<]+' | head -1)
+          echo "GECKO_VERSION=${V}" >> "$GITHUB_ENV"
+          echo "GeckoView version: ${V:-<none>}"
+
       - name: Build debug APKs
         run: |
           set -o pipefail
-          gradle assembleDebug --no-daemon --stacktrace 2>&1 | tee build.log
+          if [ -n "$GECKO_VERSION" ]; then GV="-PgeckoVersion=$GECKO_VERSION"; else GV=""; fi
+          gradle assembleDebug --no-daemon --stacktrace $GV 2>&1 | tee build.log
 
       # Publica los APK y el registro en la rama "builds" (aunque la compilación falle)
       - name: Publish results to builds branch
@@ -35,7 +45,8 @@ jobs:
           mkdir -p out
           cp build.log out/ 2>/dev/null || true
           find . -path '*/build/outputs/apk/debug/*.apk' -exec cp {} out/ \;
-          echo "sha=${GITHUB_SHA} status=${{ job.status }}" > out/status.txt
+          echo "sha=${GITHUB_SHA} status=${{ job.status }} gecko=${GECKO_VERSION}" > out/status.txt
+          ls -l out
           cd out
           git init -q
           git checkout -q -b builds

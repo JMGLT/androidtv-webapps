@@ -18,3 +18,4 @@ dependencyResolutionManagement {
 rootProject.name = "androidtv-webapps"
 
 include(":webview")
+include(":gecko")

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Web TV (Gecko)</string>
+    <string name="netflix_label">Netflix (Gecko)</string>
+    <string name="prime_label">Prime Video (Gecko)</string>
+    <string name="help_toast">OK: clic · Menú: alternar cursor/foco · Atrás: volver · Play/Pausa: espacio</string>
+</resources>
