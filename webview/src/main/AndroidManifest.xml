@@ -15,7 +15,5 @@
     <application
         android:allowBackup="false"
         android:hardwareAccelerated="true"
-        android:icon="@drawable/ic_webtv"
-        android:label="@string/app_name"
         android:usesCleartextTraffic="false" />
 </manifest>
