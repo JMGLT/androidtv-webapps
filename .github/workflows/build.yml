@@ -43,44 +43,50 @@ jobs:
           if [ -n "$GECKO_VERSION" ]; then GV="-PgeckoVersion=$GECKO_VERSION"; else GV=""; fi
           gradle assembleDebug --no-daemon --stacktrace $GV 2>&1 | tee build.log
 
-      # Reúne los APK con nombres normales: Servicio_webapp_Motor[_arquitectura]_version.apk
+      # Reúne los APK con nombres normales: Servicio_webapp_version.apk (WebView)
+      # y Servicio_geckoapp_version_arquitectura.apk (GeckoView). La versión sale de
+      # appVersion en gradle.properties.
       - name: Collect and rename APKs
         if: always()
         run: |
-          VERSION=$(grep -oP 'versionName = "\K[^"]+' webview/build.gradle.kts | head -1)
+          VERSION=$(grep '^appVersion=' gradle.properties | cut -d= -f2 | tr -d '[:space:]')
           echo "APP_VERSION=${VERSION}" >> "$GITHUB_ENV"
           mkdir -p apks
           find . -path '*/build/outputs/apk/*' -name '*.apk' | while read -r f; do
             b=$(basename "$f" .apk)
             case "$b" in
-              webview-netflix-debug) name="Netflix_webapp_WebView_${VERSION}.apk" ;;
-              webview-prime-debug)   name="PrimeVideo_webapp_WebView_${VERSION}.apk" ;;
-              gecko-netflix-*-debug) abi=${b#gecko-netflix-}; abi=${abi%-debug}; name="Netflix_webapp_GeckoView_${abi}_${VERSION}.apk" ;;
-              gecko-prime-*-debug)   abi=${b#gecko-prime-};   abi=${abi%-debug}; name="PrimeVideo_webapp_GeckoView_${abi}_${VERSION}.apk" ;;
+              webview-netflix-debug) name="Netflix_webapp_${VERSION}.apk" ;;
+              webview-prime-debug)   name="PrimeVideo_webapp_${VERSION}.apk" ;;
+              gecko-netflix-*-debug) abi=${b#gecko-netflix-}; abi=${abi%-debug}; name="Netflix_geckoapp_${VERSION}_${abi}.apk" ;;
+              gecko-prime-*-debug)   abi=${b#gecko-prime-};   abi=${abi%-debug}; name="PrimeVideo_geckoapp_${VERSION}_${abi}.apk" ;;
               *) name="${b}_${VERSION}.apk" ;;
             esac
             cp "$f" "apks/$name"
           done
           ls -l apks
 
-      # Publica los APK en la pestaña Releases (release "latest", se reemplaza en cada compilación)
+      # Publica los APK en la pestaña Releases con la versión de gradle.properties (tag vX.Y.Z).
+      # Si se repite la compilación con la misma versión, esa release se reemplaza; para
+      # conservar la anterior hay que subir appVersion.
       - name: Publish GitHub release
         if: success()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           printf '%s\n' \
-            "Versión ${APP_VERSION}. Compilación automática del commit ${GITHUB_SHA::7} (GeckoView ${GECKO_VERSION})." \
+            "Versión ${APP_VERSION} (commit ${GITHUB_SHA::7}, GeckoView ${GECKO_VERSION})." \
             "" \
-            "- *_WebView_*: usa el WebView del sistema (ligera; conviene tenerlo actualizado)." \
-            "- *_GeckoView_armeabi-v7a_*: motor de Firefox, para boxes de 32 bits." \
-            "- *_GeckoView_arm64-v8a_*: motor de Firefox, para dispositivos de 64 bits." \
+            "- *_webapp_*: versión WebView (ligera; usa el WebView del sistema, conviene tenerlo actualizado)." \
+            "- *_geckoapp_*_armeabi-v7a: versión GeckoView (motor de Firefox) para boxes de 32 bits." \
+            "- *_geckoapp_*_arm64-v8a: versión GeckoView para dispositivos de 64 bits." \
             "" \
             "Instalación: adb install -r archivo.apk" > notes.md
+          # Limpia la release rodante antigua "latest", si existe
           gh release delete latest --cleanup-tag --yes || true
-          gh release create latest apks/*.apk \
+          gh release delete "v${APP_VERSION}" --cleanup-tag --yes || true
+          gh release create "v${APP_VERSION}" apks/*.apk \
             --target "$GITHUB_SHA" \
-            --title "Webapps ${APP_VERSION}" \
+            --title "v${APP_VERSION}" \
             --notes-file notes.md
 
       # Publica los APK y el registro en la rama "builds" (aunque la compilación falle)

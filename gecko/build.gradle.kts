@@ -5,6 +5,10 @@ plugins {
 // El workflow calcula la última versión estable de GeckoView y la pasa con -PgeckoVersion=...
 val geckoVersion = (project.findProperty("geckoVersion") as String?) ?: "+"
 
+// Versión común definida en gradle.properties (appVersion=MAYOR.MENOR.PARCHE)
+val appVersion = (project.findProperty("appVersion") as String?) ?: "1.0.0"
+val versionParts = appVersion.split(".").map { it.toInt() }
+
 android {
     namespace = "app.webtv.gecko"
     compileSdk = 36
@@ -13,8 +17,8 @@ android {
         applicationId = "app.webtv.gecko"
         minSdk = 26
         targetSdk = 28
-        versionCode = 2
-        versionName = "1.0.0"
+        versionCode = versionParts[0] * 10000 + versionParts[1] * 100 + versionParts[2]
+        versionName = appVersion
     }
 
     // Una app independiente por servicio: así cada una tiene su propio acceso en el launcher.
