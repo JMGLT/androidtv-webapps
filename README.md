@@ -1,23 +1,40 @@
 # androidtv-webapps
 
-Apps mínimas para Android TV que abren servicios web (Netflix, Prime Video) a pantalla completa y se manejan con el mando. Sin analíticas ni servicios de terceros.
+Apps mínimas para Android TV que abren servicios web a pantalla completa y se manejan con el mando. Sin analíticas ni servicios de terceros. Rechazan las cookies de terceros y pulsan «Rechazar» en los avisos de cookies.
 
-## Módulos
+## Servicios y motores
 
-| Módulo | Motor | Aplicación |
+| Servicio | WebView (`*_webapp_*`) | GeckoView (`*_geckoapp_*`) |
 |---|---|---|
-| `webview` | WebView del sistema | `app.webtv.webview` |
+| Netflix | `app.webtv.webview.netflix` | `app.webtv.gecko.netflix` |
+| Prime Video | `app.webtv.webview.prime` | `app.webtv.gecko.prime` |
+| DAZN | `app.webtv.webview.dazn` | `app.webtv.gecko.dazn` |
 
-## Compilación
+- **WebView**: ligera, usa el WebView del sistema (conviene tenerlo actualizado).
+- **GeckoView**: lleva dentro el motor de Firefox (APK de unos 100 MB, uno por arquitectura).
 
-Cada push a `main` ejecuta GitHub Actions, que compila los APK de depuración y los publica, junto con `build.log` y `status.txt`, en la rama `builds`.
+## Versiones y releases
+
+La versión sale de una sola línea, `appVersion` en `gradle.properties` (MAYOR.MENOR.PARCHE). Hay que subirla en cada actualización o ajuste. Cada push a `main` compila y publica una release `vX.Y.Z` con los APK:
+
+- `Servicio_webapp_X.Y.Z.apk` (WebView)
+- `Servicio_geckoapp_X.Y.Z_armeabi-v7a.apk` (GeckoView, boxes de 32 bits)
+- `Servicio_geckoapp_X.Y.Z_arm64-v8a.apk` (GeckoView, 64 bits)
+
+Si se compila otra vez con la misma versión, esa release se reemplaza. La rama `builds` guarda además el registro de la última compilación.
 
 ## Instalación
 
 ```
 adb connect IP_DE_LA_BOX:5555
-adb install -r webview-debug.apk
+adb install Netflix_webapp_X.Y.Z.apk
 ```
+
+Cada compilación se firma con una clave de depuración distinta, así que antes de instalar una versión nueva hay que desinstalar la anterior (`adb uninstall app.webtv.webview.netflix`, etc.).
+
+## Iconos
+
+Están en `webview/src/main/res/drawable-nodpi/` y `gecko/src/main/res/drawable-nodpi/` (`ic_<servicio>.png` 512×512 y `banner_<servicio>.png` 640×360). Se pueden sustituir por otros con el mismo nombre.
 
 ## Manejo con el mando
 
@@ -32,4 +49,3 @@ adb install -r webview-debug.apk
 
 - La reproducción con DRM usa el Widevine del dispositivo. Con L3, la calidad máxima suele ser HD básico (hasta 720p); no se puede garantizar según el servicio.
 - Solo se permite navegar a los dominios de cada servicio, y el permiso de medios protegidos se concede únicamente a esos dominios.
-- Requiere un WebView reciente; si el servicio pide actualizar el navegador, actualiza *Android System WebView*.

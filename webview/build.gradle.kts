@@ -29,6 +29,10 @@ android {
             dimension = "service"
             applicationIdSuffix = ".prime"
         }
+        create("dazn") {
+            dimension = "service"
+            applicationIdSuffix = ".dazn"
+        }
     }
 
     buildTypes {

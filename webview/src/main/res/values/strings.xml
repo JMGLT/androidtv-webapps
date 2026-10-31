@@ -3,5 +3,6 @@
     <string name="app_name">Web TV</string>
     <string name="netflix_label">Netflix (web)</string>
     <string name="prime_label">Prime Video (web)</string>
+    <string name="dazn_label">DAZN (web)</string>
     <string name="help_toast">OK: clic · Menú: alternar cursor/foco · Atrás: volver · Play/Pausa: espacio</string>
 </resources>
