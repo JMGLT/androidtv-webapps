@@ -64,7 +64,6 @@ jobs:
               netflix) N=Netflix ;;
               prime)   N=PrimeVideo ;;
               dazn)    N=DAZN ;;
-              sky)     N=Sky ;;
               *)       N=$svc ;;
             esac
             if [ "$eng" = webview ]; then
@@ -101,6 +100,23 @@ jobs:
               --target "$GITHUB_SHA" \
               --title "${base//_/ } v${ver}" \
               --notes-file notes.md
+          done
+
+      # Limpieza puntual: elimina de las releases lo que quedó de la app de Sky, retirada del proyecto.
+      - name: Remove retired Sky releases
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for tag in Sky_webapp-v1.2.1 Sky_geckoapp-v1.2.1; do
+            gh release delete "$tag" --cleanup-tag --yes || true
+          done
+          for rel in v1.2.0 v1.2.1; do
+            for a in Sky_webapp_1.2.0.apk Sky_webapp_1.2.1.apk \
+                     Sky_geckoapp_1.2.0_armeabi-v7a.apk Sky_geckoapp_1.2.0_arm64-v8a.apk \
+                     Sky_geckoapp_1.2.1_armeabi-v7a.apk Sky_geckoapp_1.2.1_arm64-v8a.apk; do
+              gh release delete-asset "$rel" "$a" --yes 2>/dev/null || true
+            done
           done
 
       # Publica los APK y el registro en la rama "builds" (aunque la compilación falle)

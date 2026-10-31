@@ -4,6 +4,5 @@
     <string name="netflix_label">Netflix (Gecko)</string>
     <string name="prime_label">Prime Video (Gecko)</string>
     <string name="dazn_label">DAZN (Gecko)</string>
-    <string name="sky_label">Sky (Gecko)</string>
     <string name="help_toast">OK: clic · Menú: alternar cursor/foco · Atrás: volver · Play/Pausa: espacio</string>
 </resources>

@@ -46,12 +46,6 @@ android {
             versionName = appVersion("dazn")
             versionCode = versionCodeOf(appVersion("dazn"))
         }
-        create("sky") {
-            dimension = "service"
-            applicationIdSuffix = ".sky"
-            versionName = appVersion("sky")
-            versionCode = versionCodeOf(appVersion("sky"))
-        }
     }
 
     // Un APK por arquitectura (GeckoView es grande y así cada archivo pesa menos).

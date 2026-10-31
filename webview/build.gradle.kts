@@ -43,12 +43,6 @@ android {
             versionName = appVersion("dazn")
             versionCode = versionCodeOf(appVersion("dazn"))
         }
-        create("sky") {
-            dimension = "service"
-            applicationIdSuffix = ".sky"
-            versionName = appVersion("sky")
-            versionCode = versionCodeOf(appVersion("sky"))
-        }
     }
 
     buildTypes {

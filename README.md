@@ -9,7 +9,6 @@ Apps mínimas para Android TV que abren servicios web a pantalla completa y se m
 | Netflix | `app.webtv.webview.netflix` | `app.webtv.gecko.netflix` |
 | Prime Video | `app.webtv.webview.prime` | `app.webtv.gecko.prime` |
 | DAZN | `app.webtv.webview.dazn` | `app.webtv.gecko.dazn` |
-| Sky (Italia, `sky.it/login`) | `app.webtv.webview.sky` | `app.webtv.gecko.sky` |
 
 - **WebView**: ligera, usa el WebView del sistema (conviene tenerlo actualizado).
 - **GeckoView**: lleva dentro el motor de Firefox (APK de unos 100 MB, uno por arquitectura).
