@@ -102,16 +102,6 @@ jobs:
               --notes-file notes.md
           done
 
-      # Limpieza puntual: elimina las releases antiguas "de todo junto" (ya hay una por app y versión).
-      - name: Remove legacy suite releases
-        if: success()
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          for tag in v1.0.0 v1.1.0 v1.2.0 v1.2.1; do
-            gh release delete "$tag" --cleanup-tag --yes || true
-          done
-
       # Publica los APK y el registro en la rama "builds" (aunque la compilación falle)
       - name: Publish results to builds branch
         if: always()
