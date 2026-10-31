@@ -44,7 +44,7 @@ jobs:
         run: |
           mkdir -p out
           cp build.log out/ 2>/dev/null || true
-          find . -path '*/build/outputs/apk/debug/*.apk' -exec cp {} out/ \;
+          find . -path '*/build/outputs/apk/*' -name '*.apk' -exec cp {} out/ \;
           echo "sha=${GITHUB_SHA} status=${{ job.status }} gecko=${GECKO_VERSION}" > out/status.txt
           ls -l out
           cd out
