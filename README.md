@@ -16,13 +16,12 @@ Apps mínimas para Android TV que abren servicios web a pantalla completa y se m
 
 ## Versiones y releases
 
-La versión sale de una sola línea, `appVersion` en `gradle.properties` (MAYOR.MENOR.PARCHE). Hay que subirla en cada actualización o ajuste. Cada push a `main` compila y publica una release `vX.Y.Z` con los APK:
+Cada app tiene su propia versión (MAYOR.MENOR.PARCHE) en `gradle.properties`, con la forma `version.<motor>.<servicio>`. **Se sube solo la de las apps que cambian.** Cada push a `main` compila todo, y publica una release por app y versión que todavía no exista:
 
-- `Servicio_webapp_X.Y.Z.apk` (WebView)
-- `Servicio_geckoapp_X.Y.Z_armeabi-v7a.apk` (GeckoView, boxes de 32 bits)
-- `Servicio_geckoapp_X.Y.Z_arm64-v8a.apk` (GeckoView, 64 bits)
+- `Servicio_webapp-vX.Y.Z` con `Servicio_webapp_X.Y.Z.apk` (WebView)
+- `Servicio_geckoapp-vX.Y.Z` con `Servicio_geckoapp_X.Y.Z_armeabi-v7a.apk` (boxes de 32 bits) y `..._arm64-v8a.apk` (64 bits)
 
-Si se compila otra vez con la misma versión, esa release se reemplaza. La rama `builds` guarda además el registro de la última compilación.
+Si una versión ya tiene release, se conserva tal cual (hay que subir la versión de esa app para publicar un cambio). La rama `builds` guarda además el registro de la última compilación.
 
 ## Instalación
 

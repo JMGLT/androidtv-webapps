@@ -43,55 +43,65 @@ jobs:
           if [ -n "$GECKO_VERSION" ]; then GV="-PgeckoVersion=$GECKO_VERSION"; else GV=""; fi
           gradle assembleDebug --no-daemon --stacktrace $GV 2>&1 | tee build.log
 
-      # Reúne los APK con nombres normales: Servicio_webapp_version.apk (WebView)
-      # y Servicio_geckoapp_version_arquitectura.apk (GeckoView). La versión sale de
-      # appVersion en gradle.properties.
+      # Reúne los APK con nombres normales: Servicio_webapp_X.Y.Z.apk (WebView) y
+      # Servicio_geckoapp_X.Y.Z_arquitectura.apk (GeckoView). Cada app usa su propia versión
+      # (version.<motor>.<servicio> en gradle.properties).
       - name: Collect and rename APKs
         if: always()
         run: |
-          VERSION=$(grep '^appVersion=' gradle.properties | cut -d= -f2 | tr -d '[:space:]')
-          echo "APP_VERSION=${VERSION}" >> "$GITHUB_ENV"
           mkdir -p apks
           find . -path '*/build/outputs/apk/*' -name '*.apk' | while read -r f; do
             b=$(basename "$f" .apk)
             case "$b" in
-              webview-netflix-debug) name="Netflix_webapp_${VERSION}.apk" ;;
-              webview-prime-debug)   name="PrimeVideo_webapp_${VERSION}.apk" ;;
-              webview-dazn-debug)    name="DAZN_webapp_${VERSION}.apk" ;;
-              webview-sky-debug)     name="Sky_webapp_${VERSION}.apk" ;;
-              gecko-netflix-*-debug) abi=${b#gecko-netflix-}; abi=${abi%-debug}; name="Netflix_geckoapp_${VERSION}_${abi}.apk" ;;
-              gecko-prime-*-debug)   abi=${b#gecko-prime-};   abi=${abi%-debug}; name="PrimeVideo_geckoapp_${VERSION}_${abi}.apk" ;;
-              gecko-dazn-*-debug)    abi=${b#gecko-dazn-};    abi=${abi%-debug}; name="DAZN_geckoapp_${VERSION}_${abi}.apk" ;;
-              gecko-sky-*-debug)     abi=${b#gecko-sky-};     abi=${abi%-debug}; name="Sky_geckoapp_${VERSION}_${abi}.apk" ;;
-              *) name="${b}_${VERSION}.apk" ;;
+              webview-*-debug)
+                eng=webview; svc=${b#webview-}; svc=${svc%-debug}; abi="" ;;
+              gecko-*-*-debug)
+                eng=gecko; rest=${b#gecko-}; rest=${rest%-debug}; svc=${rest%%-*}; abi=${rest#*-} ;;
+              *) echo "APK desconocido: $b"; continue ;;
             esac
+            VER=$(grep "^version\.${eng}\.${svc}=" gradle.properties | cut -d= -f2 | tr -d '[:space:]')
+            case "$svc" in
+              netflix) N=Netflix ;;
+              prime)   N=PrimeVideo ;;
+              dazn)    N=DAZN ;;
+              sky)     N=Sky ;;
+              *)       N=$svc ;;
+            esac
+            if [ "$eng" = webview ]; then
+              name="${N}_webapp_${VER}.apk"
+            else
+              name="${N}_geckoapp_${VER}_${abi}.apk"
+            fi
             cp "$f" "apks/$name"
           done
           ls -l apks
 
-      # Publica los APK en la pestaña Releases con la versión de gradle.properties (tag vX.Y.Z).
-      # Si se repite la compilación con la misma versión, esa release se reemplaza; para
-      # conservar la anterior hay que subir appVersion.
-      - name: Publish GitHub release
+      # Publica una release por app y versión (tag Servicio_webapp-vX.Y.Z / Servicio_geckoapp-vX.Y.Z).
+      # Si esa versión ya tiene release, se conserva tal cual: para publicar un cambio hay que
+      # subir la versión de esa app en gradle.properties. Las apps sin cambios no se tocan.
+      - name: Publish GitHub releases
         if: success()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          printf '%s\n' \
-            "Versión ${APP_VERSION} (commit ${GITHUB_SHA::7}, GeckoView ${GECKO_VERSION})." \
-            "" \
-            "- *_webapp_*: versión WebView (ligera; usa el WebView del sistema, conviene tenerlo actualizado)." \
-            "- *_geckoapp_*_armeabi-v7a: versión GeckoView (motor de Firefox) para boxes de 32 bits." \
-            "- *_geckoapp_*_arm64-v8a: versión GeckoView para dispositivos de 64 bits." \
-            "" \
-            "Instalación: adb install -r archivo.apk" > notes.md
-          # Limpia la release rodante antigua "latest", si existe
-          gh release delete latest --cleanup-tag --yes || true
-          gh release delete "v${APP_VERSION}" --cleanup-tag --yes || true
-          gh release create "v${APP_VERSION}" apks/*.apk \
-            --target "$GITHUB_SHA" \
-            --title "v${APP_VERSION}" \
-            --notes-file notes.md
+          for tag in $(ls apks | sed -E 's/^([A-Za-z]+_(web|gecko)app)_([0-9]+\.[0-9]+\.[0-9]+).*/\1-v\3/' | sort -u); do
+            base=${tag%-v*}
+            ver=${tag#*-v}
+            if gh release view "$tag" > /dev/null 2>&1; then
+              echo "La release $tag ya existe: se conserva sin cambios."
+              continue
+            fi
+            files=$(ls apks | grep -E "^${base}_${ver}(\.apk|_)" | sed 's#^#apks/#')
+            case "$base" in
+              *_webapp) desc="Versión WebView (ligera; usa el WebView del sistema, conviene tenerlo actualizado)." ;;
+              *)        desc="Versión GeckoView (motor de Firefox). armeabi-v7a: boxes de 32 bits; arm64-v8a: 64 bits." ;;
+            esac
+            printf '%s\n' "$desc" "" "Commit ${GITHUB_SHA::7} · GeckoView ${GECKO_VERSION}" "" "Instalación: adb install archivo.apk" > notes.md
+            gh release create "$tag" $files \
+              --target "$GITHUB_SHA" \
+              --title "${base//_/ } v${ver}" \
+              --notes-file notes.md
+          done
 
       # Publica los APK y el registro en la rama "builds" (aunque la compilación falle)
       - name: Publish results to builds branch
@@ -100,7 +110,7 @@ jobs:
           mkdir -p out
           cp build.log out/ 2>/dev/null || true
           cp apks/*.apk out/ 2>/dev/null || true
-          echo "sha=${GITHUB_SHA} status=${{ job.status }} gecko=${GECKO_VERSION} version=${APP_VERSION}" > out/status.txt
+          echo "sha=${GITHUB_SHA} status=${{ job.status }} gecko=${GECKO_VERSION}" > out/status.txt
           # GitHub rechaza archivos de más de 100 MB: si algún APK los supera, se trocea
           # (se recompone con: cat archivo.apk.part.* > archivo.apk)
           for f in out/*.apk; do
