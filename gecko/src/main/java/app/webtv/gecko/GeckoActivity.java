@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -112,6 +113,9 @@ public abstract class GeckoActivity extends Activity {
                     GeckoSession s, LoadRequest request) {
                 Uri u = Uri.parse(request.uri);
                 boolean ok = "https".equals(u.getScheme()) && hostAllowed(u.getHost());
+                if (!ok) {
+                    Log.w("webtv", "Navegación bloqueada: " + u);
+                }
                 return GeckoResult.fromValue(ok ? AllowOrDeny.ALLOW : AllowOrDeny.DENY);
             }
 

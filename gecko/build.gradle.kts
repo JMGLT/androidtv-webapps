@@ -36,6 +36,10 @@ android {
             dimension = "service"
             applicationIdSuffix = ".dazn"
         }
+        create("sky") {
+            dimension = "service"
+            applicationIdSuffix = ".sky"
+        }
     }
 
     // Un APK por arquitectura (GeckoView es grande y así cada archivo pesa menos).

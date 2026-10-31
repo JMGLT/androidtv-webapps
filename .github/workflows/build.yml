@@ -58,9 +58,11 @@ jobs:
               webview-netflix-debug) name="Netflix_webapp_${VERSION}.apk" ;;
               webview-prime-debug)   name="PrimeVideo_webapp_${VERSION}.apk" ;;
               webview-dazn-debug)    name="DAZN_webapp_${VERSION}.apk" ;;
+              webview-sky-debug)     name="Sky_webapp_${VERSION}.apk" ;;
               gecko-netflix-*-debug) abi=${b#gecko-netflix-}; abi=${abi%-debug}; name="Netflix_geckoapp_${VERSION}_${abi}.apk" ;;
               gecko-prime-*-debug)   abi=${b#gecko-prime-};   abi=${abi%-debug}; name="PrimeVideo_geckoapp_${VERSION}_${abi}.apk" ;;
               gecko-dazn-*-debug)    abi=${b#gecko-dazn-};    abi=${abi%-debug}; name="DAZN_geckoapp_${VERSION}_${abi}.apk" ;;
+              gecko-sky-*-debug)     abi=${b#gecko-sky-};     abi=${abi%-debug}; name="Sky_geckoapp_${VERSION}_${abi}.apk" ;;
               *) name="${b}_${VERSION}.apk" ;;
             esac
             cp "$f" "apks/$name"

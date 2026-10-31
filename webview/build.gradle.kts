@@ -33,6 +33,10 @@ android {
             dimension = "service"
             applicationIdSuffix = ".dazn"
         }
+        create("sky") {
+            dimension = "service"
+            applicationIdSuffix = ".sky"
+        }
     }
 
     buildTypes {

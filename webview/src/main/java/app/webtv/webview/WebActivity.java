@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -118,7 +119,11 @@ public abstract class WebActivity extends Activity {
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 Uri u = request.getUrl();
                 // true = bloquear la navegación
-                return !("https".equals(u.getScheme()) && hostAllowed(u.getHost()));
+                boolean block = !("https".equals(u.getScheme()) && hostAllowed(u.getHost()));
+                if (block) {
+                    Log.w("webtv", "Navegación bloqueada: " + u);
+                }
+                return block;
             }
 
             @Override
