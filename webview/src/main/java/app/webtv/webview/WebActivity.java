@@ -25,6 +25,9 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +50,7 @@ public abstract class WebActivity extends Activity {
     private View customView;
     private WebChromeClient.CustomViewCallback customCallback;
 
+    private String rejectScript = "";
     private boolean cursorMode = true;
     private float cx;
     private float cy;
@@ -69,6 +73,7 @@ public abstract class WebActivity extends Activity {
 
         setContentView(root);
         hideSystemUi();
+        rejectScript = readAsset("reject_cookies.js");
         configureWebView();
 
         root.post(() -> {
@@ -115,6 +120,15 @@ public abstract class WebActivity extends Activity {
                 // true = bloquear la navegación
                 return !("https".equals(u.getScheme()) && hostAllowed(u.getHost()));
             }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                // Rechaza automáticamente el aviso de cookies de la página.
+                if (!rejectScript.isEmpty() && url != null
+                        && hostAllowed(Uri.parse(url).getHost())) {
+                    view.evaluateJavascript(rejectScript, null);
+                }
+            }
         });
 
         web.setWebChromeClient(new WebChromeClient() {
@@ -150,6 +164,20 @@ public abstract class WebActivity extends Activity {
                 exitCustomView();
             }
         });
+    }
+
+    private String readAsset(String name) {
+        try (InputStream in = getAssets().open(name);
+             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            byte[] buf = new byte[4096];
+            int n;
+            while ((n = in.read(buf)) > 0) {
+                out.write(buf, 0, n);
+            }
+            return out.toString("UTF-8");
+        } catch (IOException e) {
+            return "";
+        }
     }
 
     private boolean hostAllowed(String host) {

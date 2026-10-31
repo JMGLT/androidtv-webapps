@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+  "name": "Rechazar cookies",
+  "version": "1.0",
+  "description": "Pulsa automáticamente «Rechazar» en los avisos de cookies.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "cookie-reject@androidtv-webapps"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*/*"],
+      "js": ["reject.js"],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ]
+}

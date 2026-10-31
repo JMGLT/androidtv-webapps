@@ -78,6 +78,10 @@ public abstract class GeckoActivity extends Activity {
             // para poder mantener la sesión iniciada.
             runtime.getSettings().getContentBlocking()
                     .setCookieBehavior(ContentBlocking.CookieBehavior.ACCEPT_FIRST_PARTY);
+            // Extensión integrada que rechaza automáticamente los avisos de cookies.
+            runtime.getWebExtensionController().ensureBuiltIn(
+                    "resource://android/assets/cookie-reject/",
+                    "cookie-reject@androidtv-webapps");
         }
 
         GeckoSessionSettings settings = new GeckoSessionSettings.Builder()
