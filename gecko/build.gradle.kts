@@ -40,6 +40,13 @@ android {
         }
     }
 
+    // Comprime las librerías nativas dentro del APK para que pese bastante menos.
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false

@@ -47,6 +47,16 @@ jobs:
           find . -path '*/build/outputs/apk/*' -name '*.apk' -exec cp {} out/ \;
           echo "sha=${GITHUB_SHA} status=${{ job.status }} gecko=${GECKO_VERSION}" > out/status.txt
           ls -l out
+          # GitHub rechaza archivos de más de 100 MB: si algún APK los supera, se trocea
+          # (se recompone con: cat archivo.apk.part.* > archivo.apk)
+          for f in out/*.apk; do
+            [ -f "$f" ] || continue
+            if [ "$(stat -c%s "$f")" -gt 94371840 ]; then
+              split -b 90M -d "$f" "$f.part."
+              rm "$f"
+            fi
+          done
+          ls -l out
           cd out
           git init -q
           git checkout -q -b builds
