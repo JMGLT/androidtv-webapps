@@ -38,6 +38,29 @@ jobs:
           if [ -n "$GECKO_VERSION" ]; then GV="-PgeckoVersion=$GECKO_VERSION"; else GV=""; fi
           gradle assembleDebug --no-daemon --stacktrace $GV 2>&1 | tee build.log
 
+      # Publica los APK en la pestaña Releases (release "latest", se reemplaza en cada compilación)
+      - name: Publish GitHub release
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p release
+          find . -path '*/build/outputs/apk/*' -name '*.apk' -exec cp {} release/ \;
+          ls -l release
+          printf '%s\n' \
+            "Compilación automática del commit ${GITHUB_SHA::7} (GeckoView ${GECKO_VERSION})." \
+            "" \
+            "- webview-netflix / webview-prime: versión WebView (ligera; usa el WebView del sistema)." \
+            "- gecko-*-armeabi-v7a: versión GeckoView para boxes de 32 bits." \
+            "- gecko-*-arm64-v8a: versión GeckoView para dispositivos de 64 bits." \
+            "" \
+            "Instalación: adb install -r archivo.apk" > notes.md
+          gh release delete latest --cleanup-tag --yes || true
+          gh release create latest release/*.apk \
+            --target "$GITHUB_SHA" \
+            --title "Última compilación" \
+            --notes-file notes.md
+
       # Publica los APK y el registro en la rama "builds" (aunque la compilación falle)
       - name: Publish results to builds branch
         if: always()
