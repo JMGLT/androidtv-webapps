@@ -35,17 +35,8 @@ jobs:
       - name: Build debug APKs
         run: |
           set -o pipefail
-          {
-            SDK="${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
-            SDKM="$SDK/cmdline-tools/latest/bin/sdkmanager"
-            echo "SDK platforms before:"; ls "$SDK/platforms" || true
-            (yes | "$SDKM" --licenses > /dev/null) || true
-            echo "Available platforms 35+:"; ("$SDKM" --list 2>/dev/null | grep -E "platforms;android-3[5-9]") || true
-            ("$SDKM" "platforms;android-37" || "$SDKM" "platforms;android-37.0") || true
-            echo "SDK platforms after:"; ls "$SDK/platforms" || true
-            if [ -n "$GECKO_VERSION" ]; then GV="-PgeckoVersion=$GECKO_VERSION"; else GV=""; fi
-            gradle assembleDebug --no-daemon --stacktrace $GV
-          } 2>&1 | tee build.log
+          if [ -n "$GECKO_VERSION" ]; then GV="-PgeckoVersion=$GECKO_VERSION"; else GV=""; fi
+          gradle assembleDebug --no-daemon --stacktrace $GV 2>&1 | tee build.log
 
       # Publica los APK y el registro en la rama "builds" (aunque la compilación falle)
       - name: Publish results to builds branch

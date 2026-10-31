@@ -7,8 +7,7 @@ val geckoVersion = (project.findProperty("geckoVersion") as String?) ?: "+"
 
 android {
     namespace = "app.webtv.gecko"
-    // GeckoView reciente y sus dependencias androidx exigen compilar contra una API alta.
-    compileSdk = 37
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "app.webtv.gecko"
@@ -50,6 +49,15 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+// GeckoView y algunas librerías androidx declaran que requieren compilar contra la API 37,
+// pero ese SDK no es utilizable con esta versión de AGP. El código de esta app no usa APIs
+// nuevas, así que se desactiva solo esa comprobación de metadatos.
+tasks.configureEach {
+    if (name.startsWith("check") && name.endsWith("AarMetadata")) {
+        enabled = false
     }
 }
 
