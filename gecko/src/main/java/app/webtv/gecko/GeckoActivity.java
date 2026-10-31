@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import org.mozilla.geckoview.AllowOrDeny;
+import org.mozilla.geckoview.ContentBlocking;
 import org.mozilla.geckoview.GeckoResult;
 import org.mozilla.geckoview.GeckoRuntime;
 import org.mozilla.geckoview.GeckoSession;
@@ -73,6 +74,10 @@ public abstract class GeckoActivity extends Activity {
 
         if (runtime == null) {
             runtime = GeckoRuntime.create(getApplicationContext());
+            // Cookies de terceros rechazadas por defecto; las propias del servicio se aceptan
+            // para poder mantener la sesión iniciada.
+            runtime.getSettings().getContentBlocking()
+                    .setCookieBehavior(ContentBlocking.CookieBehavior.ACCEPT_FIRST_PARTY);
         }
 
         GeckoSessionSettings settings = new GeckoSessionSettings.Builder()

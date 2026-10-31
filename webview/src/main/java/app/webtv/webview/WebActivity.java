@@ -102,9 +102,11 @@ public abstract class WebActivity extends Activity {
                 .replace(" Mobile", "");
         s.setUserAgentString(ua);
 
+        // Cookies de terceros rechazadas por defecto; las propias del servicio se aceptan
+        // para poder mantener la sesión iniciada.
         CookieManager cookies = CookieManager.getInstance();
         cookies.setAcceptCookie(true);
-        cookies.setAcceptThirdPartyCookies(web, true);
+        cookies.setAcceptThirdPartyCookies(web, false);
 
         web.setWebViewClient(new WebViewClient() {
             @Override
